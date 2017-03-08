@@ -1,105 +1,205 @@
 ---
 type: doc
+
 layout: reference
+
 category: "Syntax"
+
 title: "Classes and Inheritance"
+
 related:
-    - functions.md
-    - nested-classes.md
-    - interfaces.md
+
+​    - functions.md
+
+​    - nested-classes.md
+
+​    - interfaces.md
+
 ---
 
-# Classes and Inheritance
+ 
 
-## Classes
+# Classes and Inheritance ( 클래스와 상속 )
 
-Classes in Kotlin are declared using the keyword *class*{: .keyword }:
+ 
+
+## Classes ( 클래스 )
+
+ 
+
+Kotlin의 클래스는  *class*{: .keyword } 키워드를 사용하여 선언합니다.
+
+ 
 
 ``` kotlin
+
 class Invoice {
+
 }
+
 ```
 
-The class declaration consists of the class name, the class header (specifying its type parameters, the primary
-constructor etc.) and the class body, surrounded by curly braces. Both the header and the body are optional;
-if the class has no body, curly braces can be omitted.
+ 
+
+클래스의 선언은 클래스 이름, 클래스 헤더 그리고 `{}` 중괄호에 둘러싸인 class body로 선언됩니다. 
+
+(매개 변수를 지정하고, 기본 생성자 등등..) 헤더와 본문은 모두 선택 사항입니다.
+
+클래스에 body가 없는 경우, 괄호는 생략 될 수 있습니다.
+
+ 
 
 ``` kotlin
+
 class Empty
+
 ```
 
+ 
 
-### Constructors
+ 
 
-A class in Kotlin can have a **primary constructor** and one or more **secondary constructors**. The primary
-constructor is part of the class header: it goes after the class name (and optional type parameters).
+### Constructors ( 생성자 )
+
+ 
+
+Kotlin의 클래스는  **primary constructor** (초기 생성자)  와  하나이상의 **secondary constructors** , 부차적인 생성자를 가질 수 있습니다.
+
+기본 생성자는 클래스 헤더의 일부입니다. 그것은 클래스 이름 (및 선택적 유형 매개 변수) 이후에 나옵니다.
+
+ 
 
 ``` kotlin
+
 class Person constructor(firstName: String) {
+
 }
+
 ```
 
-If the primary constructor does not have any annotations or visibility modifiers, the *constructor*{: .keyword }
-keyword can be omitted:
+ 
+
+만약 기본 생성자가  어떤 annotations도 가지고 있지 않거나 수정사항이 보이지 않는 경우,  *constructor*{: .keyword }
+
+는 생략 될 수있습니다.
+
+ 
 
 ``` kotlin
+
 class Person(firstName: String) {
+
 }
+
 ```
 
-The primary constructor cannot contain any code. Initialization code can be placed
-in **initializer blocks**, which are prefixed with the *init*{: .keyword } keyword:
+ 
+
+기본 생성자는 코드를 포함 할 수 없습니다.
+
+오직 *init*{: .keyword } 키워드가 접두어로 사용된 **initializer blocks** ( 초기화 블럭 ) 에  초기화 코드만 넣을 수 있습니다.
+
+ 
 
 ``` kotlin
+
 class Customer(name: String) {
-    init {
-        logger.info("Customer initialized with value ${name}")
-    }
+
+​    init {
+
+​        logger.info("Customer initiallized with value ${name}")
+
+​    }
+
 }
+
 ```
 
-Note that parameters of the primary constructor can be used in the initializer blocks. They can also be used in
-property initializers declared in the class body:
+ 
+
+기본 생성자 매개변수는 초기화 블록에서 사용할 수 있습니다. 또한 클래스 본문에 선언된 속성이나 initializers (초기화)도 사용할 수 잇있습니다. 
+
+ 
 
 ``` kotlin
+
 class Customer(name: String) {
-    val customerKey = name.toUpperCase()
+
+​    val customerKey = name.toUpperCase() // 대문자로 변경
+
 }
+
 ```
 
-In fact, for declaring properties and initializing them from the primary constructor, Kotlin has a concise syntax:
+ 
 
+사실, kotlin에는 기본 생성자에 속성을 선언하고 속성을 초기화하기 위한 더 간결한 구문을 사용할 수있습니다.
+
+ 
+
+ 
 
 ``` kotlin
-class Person(val firstName: String, val lastName: String, var age: Int) {
-    // ...
+
+class Person(val firstName: String , val lastName:String, var age:Int) {
+
+​    // ...
+
 }
+
 ```
 
-Much the same way as regular properties, the properties declared in the primary constructor can be
-mutable (*var*{: .keyword }) or read-only (*val*{: .keyword }).
+ 
 
-If the constructor has annotations or visibility modifiers, the *constructor*{: .keyword } keyword is required, and
-the modifiers go before it:
+일반 속성과 거의 같은 방식으로, 기본 생성자에서 선언 된 속성은 
+
+변경가능한 *var*{: .keyword }이나 read-only 인 상수 *val*{: .keyword } 로 선언 할 수 있습니다.
+
+ 
+
+만약 생성자가 annotations이나 수식어구 ( visibility modifiers )가 있다면,  *constructor*{: .keyword } 를 코드에 명시해야한다. 그리고 
+
+수식어구는 명시한 constructor앞에 있어야합니다.
+
+ 
 
 ``` kotlin
+
 class Customer public @Inject constructor(name: String) { ... }
+
 ```
 
-For more details, see [Visibility Modifiers](visibility-modifiers.html#constructors).
+ 
 
+더 자세한 사항을 알고싶으시다면 문서를 확인하세요. [Visibility Modifiers](visibility-modifiers.html#constructors).
+
+ 
+
+ 
 
 #### Secondary Constructors
 
-The class can also declare **secondary constructors**, which are prefixed with *constructor*{: .keyword }:
+ 
+
+클래스에는 constructor*{: .keyword } 를 앞에 붙인 **secondary constructors** ( 보조 생성자 ) 를 선언할 수도 있습니다.
+
+ 
 
 ``` kotlin
+
 class Person {
+
     constructor(parent: Person) {
+
         parent.children.add(this)
-    }
+
+   }
+
 }
 ```
+
+ 
+
 
 If the class has a primary constructor, each secondary constructor needs to delegate to the primary constructor, either
 directly or indirectly through another secondary constructor(s). Delegation to another constructor of the same class
@@ -129,7 +229,7 @@ class DontCreateMe private constructor () {
 > ``` kotlin
 > class Customer(val customerName: String = "")
 > ```
-{:.info}
+> {:.info}
 
 ### Creating instances of classes
 
