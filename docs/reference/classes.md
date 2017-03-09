@@ -102,7 +102,7 @@ class Customer public @Inject constructor(name: String) { ... }
 
 
 
-#### Secondary Constructors
+#### Secondary Constructors ( 1개 이상의 생성자 )
 
 클래스에는 constructor*{: .keyword } 를 앞에 붙인 **secondary constructors** ( 보조 생성자 ) 를 선언할 수도 있습니다.
 
@@ -116,9 +116,7 @@ class Person {
 
 
 
-If the class has a primary constructor, each secondary constructor needs to delegate to the primary constructor, either
-directly or indirectly through another secondary constructor(s). Delegation to another constructor of the same class
-is done using the *this*{: .keyword } keyword:
+클래스에 기본 생성자가 있는경우 , 보조 생성자는 기본생성자에게  직접 또는 간접적으로 다른 보조 생성자를 통해서 위임해야합니다. 동일한 클래스의 다른 생성자로 위임할때  *this*{: .keyword } 를 사용하여 나타낼 수 있습니다.
 
 ``` kotlin
 class Person(val name: String) {
@@ -128,14 +126,20 @@ class Person(val name: String) {
 }
 ```
 
-If a non-abstract class does not declare any constructors (primary or secondary), it will have a generated primary
-constructor with no arguments. The visibility of the constructor will be public. If you do not want your class
-to have a public constructor, you need to declare an empty primary constructor with non-default visibility:
+만약 추상클래스가 아닌 클래스에서 어떤 생성자도 선언하지 않은경우 ( 기본 생성자나 보조 생성자), 인자가 없는 기본 생성자가 생성되게 됩니다.( 첫 번째 생성자는 `val name: String`만을 초기화할 수 있고, 2번째는 `name: String, parent:Person` 을 가지는 생성자이고, name은 키워드 이므로 보조생성자가 기존생성자로 넘겨주기 위해 this()키워드를 사용하여 정의하는것. )
+
+생성자는 public으로 생성되게 됩니다. 만약 여러분이 클래스에 public한 생성자를 가지는것을 원하지 않는다면, private 로 지정한 기본 생성자가 아닌 빈생성자를 선언해야합니다. 
+
+#### **`non-default visibility`*
+
+#### **`The visibility of the constructor `*
 
 ``` kotlin
 class DontCreateMe private constructor () {
 }
 ```
+
+
 
 > **NOTE**: On the JVM, if all of the parameters of the primary constructor have default values, the compiler will
 > generate an additional parameterless constructor which will use the default values. This makes it easier to use
