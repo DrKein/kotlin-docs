@@ -139,20 +139,25 @@ class DontCreateMe private constructor () {
 }
 ```
 
-
-
-> **NOTE**: On the JVM, if all of the parameters of the primary constructor have default values, the compiler will
-> generate an additional parameterless constructor which will use the default values. This makes it easier to use
-> Kotlin with libraries such as Jackson or JPA that create class instances through parameterless constructors.
+>**NOTE** :  JVM에서는 기본생성자의 모든 매개변수가 모두 기본값을 가지고 있을 때, 컴파일러는 추가되는 매개변수가 없는 기본 생성자를 생성합니다.
 >
-> ``` kotlin
-> class Customer(val customerName: String = "")
-> ```
-> {:.info}
+>이는 매개 변수없는 생성자를 통해 클래스 인스턴스를 만드는 Jackson이나 JPA와 같은 라이브러리가있는 Kotlin을 사용하기가 더 쉽게 해줍니다.
+>
+>*Jackson* : [Jackson](https://github.com/FasterXML/jackson) 은 자바용 json 라이브러리로 잘 알려져 있지만 Json 뿐만 아니라 XML/YAML/CSV 등 다양한 형식의 데이타를 지원하는 data-processing 툴이다.
+>
+>JPA : **JPA(Java Persistent API)**
+>
+>```kotlin
+>class Customer(val customerName: String = "")
+>```
+>
+>{:.info}
 
-### Creating instances of classes
 
-To create an instance of a class, we call the constructor as if it were a regular function:
+
+### 클래스의 인스턴스 생성 ( Creating instances of classes )
+
+클래스에서 인스턴스를 생성하기 위해서는, 우리가 평소 함수를 만들고 호출하는 것처럼 생성자를 호출하여야 합니다.
 
 ``` kotlin
 val invoice = Invoice()
@@ -160,33 +165,35 @@ val invoice = Invoice()
 val customer = Customer("Joe Smith")
 ```
 
-Note that Kotlin does not have a *new*{: .keyword } keyword.
+kotlin은 *new*{: .keyword } 를 가지고 있지 않습니다.
 
-Creating instances of nested, inner and anonymous inner classes is described in [Nested classes](nested-classes.html).
+중첩된 인스턴스를 만들기와 내부 클래스 그리고 익명 내부 클래스는 문서를 참고해 주세요. [Nested classes](nested-classes.html)
 
-### Class Members
+### 클래스 멤버 ( Class Members )
 
-Classes can contain
+클래스에 포함 가능한 것.
 
-* Constructors and initializer blocks
-* [Functions](functions.html)
-* [Properties](properties.html)
-* [Nested and Inner Classes](nested-classes.html)
-* [Object Declarations](object-declarations.html)
+* 생성자와 초기화 블럭
+* 함수 - [Functions](functions.html) 
+* 속성 - [Properties](properties.html) 
+* 중첩 및 내부 클래스 - [Nested and Inner Classes](nested-classes.html) 
+* 오브젝트 선언 - [Object Declarations](object-declarations.html)
 
 
-## Inheritance
 
-All classes in Kotlin have a common superclass `Any`, that is a default super for a class with no supertypes declared:
+
+## 상속 ( Inheritance )
+
+kotlin 의 모든 클래스는 공통적인  superclass `Any`를 가집니다. 이는 클래스의 supertype을 따로 선언하지 않은 클래스들에 default로 적용됩니다.
 
 ``` kotlin
-class Example // Implicitly inherits from Any
+class Example //supertype을 선언하지 않고, 암시적으로 Any를 상속받는다.
 ```
 
-`Any` is not `java.lang.Object`; in particular, it does not have any members other than `equals()`, `hashCode()` and `toString()`.
-Please consult the [Java interoperability](java-interop.html#object-methods) section for more details.
+`Any` 는  `java.lang.Object`가 아닙니다.  특히, `Any`는 `equals()`, `hashCode()` and `toString()` 이외에는 다른 어떤 멤버도 가지고 있지 않습니다.
+더 자세한 사항은  [Java interoperability](java-interop.html#object-methods) 세션에서 참조하시면 됩니다.
 
-To declare an explicit supertype, we place the type after a colon in the class header:
+명시적으로 supertype을 선언하기 위해서는 , 클래스의 type을 콜론 앞에 명시해 주시면 됩니다.
 
 ``` kotlin
 open class Base(p: Int)
