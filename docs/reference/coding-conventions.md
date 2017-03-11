@@ -83,3 +83,4 @@ arguments가 없는 functions의 경우에는 읽기 전용 (read-only) 속성�
 * has a `O(1)` complexity. ( `O(1)`복잡도를 가집니다.)
 * is cheap to calculate (or caсhed on the first run) - *호출과 동일한 결과를 반환합니다.
 * returns the same result over invocations ( 호출과 동일한 결과를 반환합니다.)
+
