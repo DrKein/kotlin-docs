@@ -361,7 +361,9 @@ you'll be able to call its members with the same syntax as calling static method
 as a qualifier.
 
 
-## ????? !Sealed Classes
+## Sealed Classes
+
+열거 형태로 자기 자신을 return이 가능하고, 다음과 같이 `class`와 `object`에 자기 자신을 `return`하는 클래스 형태를 제공합니다.
 
 Sealed classes are used for representing restricted class hierarchies, when a value can have one of the types from a
 limited set, but cannot have any other type. They are, in a sense, an extension of enum classes: the set of values
