@@ -5,38 +5,41 @@ category: "Syntax"
 title: "Properties and Fields"
 ---
 
-# Properties and Fields
+# Properties and Fields (속성과 필드)
 
-## Declaring Properties
+## Declaring Properties ( 속성 선언 )
 
-Classes in Kotlin can have properties.
-These can be declared as mutable, using the *var*{: .keyword } keyword or read-only using the *val*{: .keyword } keyword.
+kotlin의 클래스는 속성을 가질 수 있고,  *var*{: .keyword } 키워드를 붙여 변경 가능하도록 선언할 수 있습니다. 그리고 *val*{: .keyword } 키워드를 붙여 읽기만 가능한 상수로 선언할 수도 있습니다.
 
 ``` kotlin
 public class Address { 
-    public var name: String = ...
-    public var street: String = ...
-    public var city: String = ...
-    public var state: String? = ...
-    public var zip: String = ...
+  public var name: String = ...
+  public var street: String = ...
+  public var city: String = ...
+  public var state: String? = ...
+  publiv var zip: String = ...
 }
 ```
 
-To use a property, we simply refer to it by name, as if it were a field in Java:
+속성을 사용하려면 Java의 필드 처럼 단순히 이름으로 참조하여 사용하면 됩니다.
 
 ``` kotlin
 fun copyAddress(address: Address): Address {
-    val result = Address() // there's no 'new' keyword in Kotlin
-    result.name = address.name // accessors are called
-    result.street = address.street
-    // ...
-    return result
+    var result = Adress() // 여기에 new 키워드는 kotlin에서 필요하지 않아요
+  result.name = address.name // accessors(접근자)가 불립니다.
+  result.street = address.street
+  
+  //...
+  
+  return result
 }
 ```
 
-## Getters and Setters
 
-The full syntax for declaring a property is
+
+## Getters and Setters 
+
+속성을 선언하기 위한 전체 구문은 다음과 같습니다.
 
 ``` kotlin
 var <propertyName>: <PropertyType> [= <property_initializer>]
@@ -136,7 +139,7 @@ In all respects, this is just the same as in Java since access to private proper
 Properties the value of which is known at compile time can be marked as _compile time constants_ using the `const` modifier.
 Such properties need to fulfil the following requirements:
 
-  * Top-level or member of an `object`
+* Top-level or member of an `object`
   * Initialized with a value of type `String` or a primitive type
   * No custom getter
 
@@ -184,7 +187,7 @@ being accessed and the fact that it hasn't been initialized.
 See [Overriding Properties](classes.html#overriding-properties)
 
 ## Delegated Properties
-  
+
 The most common kind of properties simply reads from (and maybe writes to) a backing field. 
 On the other hand, with custom getters and setters one can implement any behaviour of a property.
 Somewhere in between, there are certain common patterns of how a property may work. A few examples: lazy values,
