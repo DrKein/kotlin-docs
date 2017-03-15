@@ -87,36 +87,29 @@ var stringRepresentation: String
 
 규칙에 따라서 , setter 파라미터의 이름은 `value` 지만, 여러분은 원하는것이 다를 경우 다른 이름을 선택할 수 있습니다.
 
-
-
-If you need to change the visibility of an accessor or to annotate it, but don't need to change the default implementation,
-you can define the accessor without defining its body:
+만약 여러분이 접근자(accessor)의 가시성을 변경하거나 annotation을 추가해야하는 경우에는, 기본적인 구현을 변경할 필요는 없습니다. 여러분은 아래의 예시처럼 body의 선언없이 접근자를 정의할 수 있습니다.
 
 ``` kotlin
 var setterVisibility: String = "abc"
-    private set // the setter is private and has the default implementation
-
-var setterWithAnnotation: Any? = null
-    @Inject set // annotate the setter with Inject
+	private set // setter는 private 이며 기본적인 구현을 가집니다.(implementation)
 ```
 
-### Backing Fields
+### Backing Fields (백업 필드)
 
-Classes in Kotlin cannot have fields. However, sometimes it is necessary to have a backing field when using custom accessors. For these purposes, Kotlin provides
-an automatic backing field which can be accessed using the `field` identifier:
+kotlin의 클래스에는 필드(fields)가 존재하지 않습니다. 하지만 때때로 custom 접근자가 를 사용하여 백업 필드(backing field)가 필요할 때가 있을 수 있습니다. 이러한 목적으로, kotlin은 `field` 식별자를 사용하여 접근이 가능한 백업 필드를 제공합니다
 
 ``` kotlin
-var counter = 0 // the initializer value is written directly to the backing field
+var counter = 0 // 최기화된 값은 백업필드에서 직접 쓰여진다.
     set(value) {
-        if (value >= 0) field = value
+      if(value >= 0) = value
     }
 ```
 
-The `field` identifier can only be used in the accessors of the property.
+`field` 접근자는 속성의 접근자에서만 사용되어 집니다.
 
-A backing field will be generated for a property if it uses the default implementation of at least one of the accessors, or if a custom accessor references it through the `field` identifier.
+접근자 중 적어도 하나 이상의 기본구현을 사용하거나  사용자 접근자(custom accessor)가 필드 실별자를 통해 참조하는 경우 속성에 대한 백업 필드가 생성됩니다.
 
-For example, in the following case there will be no backing field:
+예를들면, 아래와 같은 케이스의 경우에는 백업필드가 없습니다.
 
 ``` kotlin
 val isEmpty: Boolean
