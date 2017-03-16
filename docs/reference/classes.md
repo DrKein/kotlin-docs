@@ -361,7 +361,7 @@ you'll be able to call its members with the same syntax as calling static method
 as a qualifier.
 
 
-## Sealed Classes
+## Sealed Classes ( 1.1 업데이트 되어있음 )
 
 열거 형태로 자기 자신을 return이 가능하고, 다음과 같이 `class`와 `object`에 자기 자신을 `return`하는 클래스 형태를 제공합니다.
 

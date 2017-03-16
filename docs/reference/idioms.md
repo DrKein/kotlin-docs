@@ -139,7 +139,6 @@ val p: String by lazy {
 
 ```kotlin
 fun String.spaceToCamelCase() { .... } 
-
 "Convert this to camelcase".spaceToCamelCase()
 ```
 
@@ -149,9 +148,7 @@ fun String.spaceToCamelCase() { .... } 
 
 ```kotlin
 object Resource {
-
     val name = "Name"
-
 }
 ```
 
@@ -159,15 +156,13 @@ object Resource {
 
 ### If not null shorthand ( 널이 아닌경우 간단한 전달법 )
 
- 
-
 ```kotlin
-val files = File("Test").listFiles()
-
- 
+val files = File("Test").listFiles() 
 
 println(files?.size) // 파일 크기는 ?
 ```
+
+
 
 ### If not null and else shorthand
 
@@ -180,11 +175,8 @@ println(files?.size?: "empty")
 
 ### Executing a statement if null ( 실행중인 코드라인(문단)이 널이라면 )
 
- 
-
 ```kotlin
 val data = ...
-
 val emaili = data["email"]? : throw IllegalStateException("Email is missing !!! ")
 ```
 
@@ -192,11 +184,8 @@ val emaili = data["email"]? : throw IllegalStateException("Email is missing !!! 
 
 ### Execute if not null (  null  이 아닌경우 실행 )
 
- 
-
 ```kotlin
 val data = ...
-
 data?.let {
 
     ... // execute this block if not null
@@ -207,8 +196,6 @@ data?.let {
  
 
 ### Return on when statement ( Return 문)
-
- 
 
 ```kotlin
 fun transform(color: String): Int {
@@ -232,25 +219,14 @@ fun transform(color: String): Int {
 
 ### 'try/catch' expression
 
- 
-
 ```kotlin
 fun test() {
-
     val result = try {
-
         count()
-
     } catch (e: ArithmenticException) {
-
         throw IllefalStateException(e)
-
     }
-
- 
-
     // Working with result
-
 }
 ```
 
@@ -258,25 +234,15 @@ fun test() {
 
 ### 'if' expression
 
- 
-
 ```kotlin
 fun foo(param: Int) {
-
     val result = if (param == 1) {
-
         "one"
-
     } else if (param == 2) {
-
         "two"
-
     } else {
-
         "three"
-
     }
-
 }
 ```
 
@@ -284,23 +250,15 @@ fun foo(param: Int) {
 
 ### Builder-style usage of methods that return `Unit` ( `Unit`을 반환하는 메서드의 작성 스타일 사용
 
- 
-
 ```kotlin
 fun arrayOfMinusOnes(size: Int): IntArray {
-
     return IntArray(size).apply { fill(-1) }
-
-}
+} 
 ```
 
  
 
- 
-
 ### Single-expression functions ( 단일 표현식 함수 )
-
- 
 
 ```kotlin
 fun theAnswer() = 42
@@ -324,15 +282,10 @@ fun theAnswer(): Int {
 
 ```kotlin
 fun transform(color: String): Int = when (color) {
-
     "Red" -> 0
-
     "Green" -> 1
-
     "Blue" -> 2
-
     else -> throw IllegalArgumentException("Invalid color param value")
-
 }
 ```
 
@@ -359,37 +312,26 @@ with(myTurtle) { //draw a 100 pix square
 }
 ```
 
-### Java 7's try with resources , 자바7 리소스 사용하기
 
- 
+
+### Java 7's try with resources , 자바7 리소스 사용하기
 
 ```kotlin
 val stream = Files.newInputStream(Paths.get("/some/file.txt"))
-
 stream.buffered().reader().use { reader ->
-
     println(reader.readText())
-
 }
 ```
 
  
 
-### Convenient form for a generic function that requires the generic type information , 제네릭 타입 정보가 필요한 편리한 제네릭 형식
-
- 
+### Convenient form for a generic function that requires the generic type information , 제네릭 타입 정보가 필요한 편리한 제네릭 형식 
 
 ```kotlin
 //  public final class Gson {
-
 //     ...
-
-//     public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
-
+//  public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
 //     ...
-
- 
-
 inline fun <reified T: Any> Gson.fromJson(json): T = this.fromJson(json, T::class.java)
 ```
 
@@ -397,19 +339,12 @@ inline fun <reified T: Any> Gson.fromJson(json): T = this.fromJson(json, T::clas
 
 ### Consuming a nullable Boolean ( nullable Boolean 사용 )
 
- 
-
 ```kotlin
 val b: Boolean? = ...
 
 if (b == true) {
-
     ...
-
 } else {
-
     // `b` is false or null
-
 }
 ```
-
