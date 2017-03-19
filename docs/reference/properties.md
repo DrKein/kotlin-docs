@@ -101,7 +101,7 @@ kotlin의 클래스에는 필드(fields)가 존재하지 않습니다. 하지만
 ``` kotlin
 var counter = 0 // 최기화된 값은 백업필드에서 직접 쓰여진다.
     set(value) {
-      if(value >= 0) = value
+      if(value >= 0) field = value
     }
 ```
 
