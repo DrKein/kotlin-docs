@@ -301,9 +301,11 @@ class Bar2 : Foo {
 
 ### 오버라이딩 규칙  (Overriding Rules)
 
-In Kotlin, implementation inheritance is regulated by the following rule: if a class inherits many implementations of the same member from its immediate superclasses,
-it must override this member and provide its own implementation (perhaps, using one of the inherited ones).
-To denote the supertype from which the inherited implementation is taken, we use *super*{: .keyword } qualified by the supertype name in angle brackets, e.g. `super<Base>`:
+kotlin에서 구현 상속은, 다음 규칙에 의해 정리 된다. : 만약 클래스가  직접, 슈퍼 클래스에서 동일한 멤버(멤버….member의 정체는 변수, 메서드 등등 클래스에 소속된 것들인가) 의 많은 구현들을 상속한 경우,
+
+반드시 상속받은 멤버들을 override(오버라이드) 하여 독자적인 구현을 제공할 필요가 있습니다. (아마도, 상속 된 것 중 하나를 사용하여).
+
+상속된 구현을 수행하는 supertype을 나타내기 위해, 우리는  *super*{: .keyword } 를 사용하여 `super<Base>` 와 같이, 꺽쇠 괄호 안의 supertype의 이름으로 정규화 할 수 있습니다. ( qualified by  -  정규화 , 권한을 주다, 슈퍼타입을 정의하여 사용할 수 있다.)
 
 ``` kotlin
 open class A {
