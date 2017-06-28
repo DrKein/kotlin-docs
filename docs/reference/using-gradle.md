@@ -8,35 +8,44 @@ title: "Using Gradle"
 
 In order to build Kotlin with Gradle you should [set up the *kotlin-gradle* plugin](#plugin-and-versions), [apply it](#targeting-the-jvm) to your project and [add *kotlin-stdlib* dependencies](#configuring-dependencies). Those actions may also be performed automatically in IntelliJ IDEA by invoking the Tools \| Kotlin \| Configure Kotlin in Project action.
 
-You can also enable [incremental compilation](#incremental-compilation) to make your builds faster. 
-
 ## Plugin and Versions
 
-The *kotlin-gradle-plugin* compiles Kotlin sources and modules.
+The `kotlin-gradle-plugin` compiles Kotlin sources and modules.
 
-The version of Kotlin to use is usually defined as the *kotlin_version* property:
+The version of Kotlin to use is usually defined as the `kotlin_version` property:
 
 ``` groovy
 buildscript {
-   ext.kotlin_version = '<version to use>'
+    ext.kotlin_version = '<version to use>'
 
-   repositories {
-     mavenCentral()
-   }
+    repositories {
+        mavenCentral()
+    }
 
-   dependencies {
-     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-   }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
 ```
 
+This is not required when using Kotlin Gradle plugin 1.1.1 and above with the [Gradle plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block).
+
 ## Targeting the JVM
 
-To target the JVM, the Kotlin plugin needs to be applied
+To target the JVM, the Kotlin plugin needs to be applied:
 
 ``` groovy
 apply plugin: "kotlin"
 ```
+
+Or, starting with Kotlin 1.1.1, the plugin can be applied using the [Gradle plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
+
+```groovy
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "<version to use>"
+}
+```
+The `version` should be literal in this block, and it cannot be applied from another build script.
 
 Kotlin sources can be mixed with Java sources in the same folder, or in different folders. The default convention is using different folders:
 
@@ -74,8 +83,9 @@ sourceSets {
 }
 ```
 
-If you want to create a re-usable library, use `kotlinOptions.metaInfo` to generate additional JS file with binary descriptors.
-This file should be distributed together with the result of translation.
+In addition to the output JavaScript file, the plugin by default creates an additional JS file with binary descriptors.
+This file is required if you're building a re-usable library that other Kotlin modules can depend on, and should be distributed together with the result of translation.
+The generation is controlled by the  `kotlinOptions.metaInfo` option:
 
 ``` groovy
 compileKotlin2Js {
@@ -117,83 +127,88 @@ This lets Android Studio know that the kotlin directory is a source root, so whe
 
 ## Configuring Dependencies
 
-In addition to the kotlin-gradle-plugin dependency shown above, you need to add a dependency on the Kotlin standard library:
+In addition to the `kotlin-gradle-plugin` dependency shown above, you need to add a dependency on the Kotlin standard library:
 
 ``` groovy
-buildscript {
-   ext.kotlin_version = '<version to use>'
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-  }
-}
-
-apply plugin: "kotlin" // or apply plugin: "kotlin2js" if targeting JavaScript
-
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
 }
 ```
 
-If your project uses Kotlin reflection or testing facilities, you need to add the corresponding dependencies as well:
+If you target JavaScript, use `compile "org.jetbrains.kotlin:kotlin-stdlib-js"` instead.
+
+If you're targeting JDK 7 or JDK 8, you can use extended versions of the Kotlin standard library which contain
+additional extension functions for APIs added in new JDK versions. Instead of `kotlin-stdlib`, use one of the
+following dependencies:
 
 ``` groovy
-compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+compile "org.jetbrains.kotlin:kotlin-stdlib-jre7"
+compile "org.jetbrains.kotlin:kotlin-stdlib-jre8"
 ```
+
+If your project uses [Kotlin reflection](/api/latest/jvm/stdlib/kotlin.reflect.full/index.html) or testing facilities, you need to add the corresponding dependencies as well:
+
+``` groovy
+compile "org.jetbrains.kotlin:kotlin-reflect"
+testCompile "org.jetbrains.kotlin:kotlin-test"
+testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+```
+
+Starting with Kotlin 1.1.2, the dependencies with group `org.jetbrains.kotlin` are by default resolved with the version
+taken from the applied plugin. You can provide the version manually using the full dependency notation like
+`compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"`.
 
 ## Annotation processing
 
-The Kotlin plugin supports annotation processors like _Dagger_ or _DBFlow_. In order for them to work with Kotlin classes, add the respective dependencies using the `kapt` configuration in your `dependencies` block:
-
-``` groovy
-dependencies {
-  kapt 'groupId:artifactId:version'
-}
-```
-
-If you previously used the [android-apt](https://bitbucket.org/hvisser/android-apt) plugin, remove it from your `build.gradle` file and replace usages of the `apt` configuration with `kapt`. If your project contains Java classes, `kapt` will also take care of them. If you use annotation processors for your `androidTest` or `test` sources, the respective `kapt` configurations are named `kaptAndroidTest` and `kaptTest`.
-
-Some annotation processing libraries require you to reference generated classes from within your code. For this to work, you'll need to add an additional flag to enable the _generation of stubs_ to your build file:
-
-``` groovy
-kapt {
-    generateStubs = true
-}
-```
-
-Note, that generation of stubs slows down your build somewhat, which is why it's disabled by default. If generated classes are referenced only in a few places in your code, you can alternatively revert to using a helper class written in Java which can be [seamlessly called](java-interop.html) from your Kotlin code.
-
-For more information on `kapt` refer to the [official blogpost](http://blog.jetbrains.com/kotlin/2015/06/better-annotation-processing-supporting-stubs-in-kapt/).
+See the description of [Kotlin annotation processing tool](kapt.html) (`kapt`).
 
 ## Incremental compilation
 
-Kotlin 1.0.2 introduced new experimental incremental compilation mode in Gradle. 
+Kotlin supports optional incremental compilation in Gradle.
 Incremental compilation tracks changes of source files between builds so only files affected by these changes would be compiled.
 
-There are several ways to enable it:
+Starting with Kotlin 1.1.1, incremental compilation is enabled by default.
 
-  1. add `kotlin.incremental=true` line either to a `gradle.properties` or a `local.properties` file;
+There are several ways to override the default setting:
 
-  2. add `-Pkotlin.incremental=true` to gradle command line parameters. Note that in this case the parameter should be added to each subsequent build (any build without this parameter invalidates incremental caches).
+  1. add `kotlin.incremental=true` or `kotlin.incremental=false` line either to a `gradle.properties` or a `local.properties` file;
 
-After incremental compilation is enabled, you should see the following warning message in your build log:
+  2. add `-Pkotlin.incremental=true` or `-Pkotlin.incremental=false` to gradle command line parameters. Note that in this case the parameter should be added to each subsequent build, and any build with disabled incremental compilation invalidates incremental caches.
+
+When incremental compilation is enabled, you should see the following warning message in your build log:
 ```
-Using experimental kotlin incremental compilation
+Using kotlin incremental compilation
 ```
 
 Note, that the first build won't be incremental.
 
+## Coroutines support
+
+[Coroutines](coroutines.html) support is an experimental feature in Kotlin 1.1, so the Kotlin compiler reports a warning when you use coroutines in your project.
+To turn off the warning, add the following block to your `build.gradle` file:
+
+``` groovy
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+```
+
 ## Compiler Options
 
-To specify additional compilation options, use the `kotlinOptions` property of a Kotlin compilation task. Examples:
+To specify additional compilation options, use the `kotlinOptions` property of a Kotlin compilation task.
+
+When targeting the JVM, the tasks are called `compileKotlin` for production code and `compileTestKotlin`
+for test code. The tasks for custom source sets of are called accordingly to the `compile<Name>Kotlin` pattern.
+
+When targeting JavaScript, the tasks are called `compileKotlin2Js` and `compileTestKotlin2Js` respectively, and `compile<Name>Kotlin2Js` for custom source sets.
+
+Examples:
 
 ``` groovy
 compileKotlin {
@@ -210,34 +225,33 @@ compileKotlin {
 
 A complete list of options for the Gradle tasks follows:
 
-### Attributes common for 'kotlin' and 'kotlin2js'
+### Attributes common for JVM and JS
 
 | Name | Description | Possible values |Default value |
 |------|-------------|-----------------|--------------|
-| `apiVersion` | Allow to use declarations only from the specified version of bundled libraries | "1.0" | "1.0" |
-| `languageVersion` | Provide source compatibility with specified language version | "1.0" | "1.0" |
+| `apiVersion` | Allow to use declarations only from the specified version of bundled libraries | "1.0", "1.1" | "1.1" |
+| `languageVersion` | Provide source compatibility with specified language version | "1.0", "1.1" | "1.1" |
 | `suppressWarnings` | Generate no warnings |  | false |
 | `verbose` | Enable verbose logging output |  | false |
 | `freeCompilerArgs` | A list of additional compiler arguments |  | [] |
 
-### Attributes specific for 'kotlin'
+### Attributes specific for JVM
 
 | Name | Description | Possible values |Default value |
 |------|-------------|-----------------|--------------|
-| `includeRuntime` | Include Kotlin runtime in to resulting .jar |  | false |
+| `javaParameters` | Generate metadata for Java 1.8 reflection on method parameters |  | false |
 | `jdkHome` | Path to JDK home directory to include into classpath, if differs from default JAVA_HOME |  |  |
-| `jvmTarget` | Target version of the generated JVM bytecode, only 1.6 is supported | "1.6" | "1.6" |
+| `jvmTarget` | Target version of the generated JVM bytecode (1.6 or 1.8), default is 1.6 | "1.6", "1.8" | "1.6" |
 | `noJdk` | Don't include Java runtime into classpath |  | false |
 | `noReflect` | Don't include Kotlin reflection implementation into classpath |  | true |
 | `noStdlib` | Don't include Kotlin runtime into classpath |  | true |
 
-### Attributes specific for 'kotlin2js'
+### Attributes specific for JS
 
 | Name | Description | Possible values |Default value |
 |------|-------------|-----------------|--------------|
-| `kjsm` | Generate kjsm-files (for creating libraries) |  | true |
 | `main` | Whether a main function should be called | "call", "noCall" | "call" |
-| `metaInfo` | Generate metadata |  | true |
+| `metaInfo` | Generate .meta.js and .kjsm files with metadata. Use to create a library |  | true |
 | `moduleKind` | Kind of a module generated by compiler | "plain", "amd", "commonjs", "umd" | "plain" |
 | `noStdlib` | Don't use bundled Kotlin stdlib |  | true |
 | `outputFile` | Output file path |  |  |
@@ -245,13 +259,20 @@ A complete list of options for the Gradle tasks follows:
 | `target` | Generate JS files for specific ECMA version | "v5" | "v5" |
 
 
+## Generating documentation
+
+To generate documentation for Kotlin projects, use [Dokka](https://github.com/Kotlin/dokka);
+please refer to the [Dokka README](https://github.com/Kotlin/dokka/blob/master/README.md#using-the-gradle-plugin)
+for configuration instructions. Dokka supports mixed-language projects and can generate output in multiple
+formats, including standard JavaDoc.
+
 ## OSGi
 
 For OSGi support see the [Kotlin OSGi page](kotlin-osgi.html).
 
 ## Examples
 
-The [Kotlin Repository](https://github.com/jetbrains/kotlin) contains examples:
+The following examples show different possibilities of configuring the Gradle plugin:
 
 * [Kotlin](https://github.com/JetBrains/kotlin-examples/tree/master/gradle/hello-world)
 * [Mixed Java and Kotlin](https://github.com/JetBrains/kotlin-examples/tree/master/gradle/mixed-java-kotlin-hello-world)

@@ -5,7 +5,7 @@ category: FAQ
 title: "Comparison to Java"
 ---
 
-# Comparison to Java
+# Comparison to Java Programming Language
 
 ## Some Java issues addressed in Kotlin
 
@@ -13,7 +13,7 @@ Kotlin fixes a series of issues that Java suffers from
 
 * Null references are [controlled by the type system](null-safety.html).
 * [No raw types](java-interop.html)
-* Arrays in Kotlin are [invariant](basic-types.html#Arrays)
+* Arrays in Kotlin are [invariant](basic-types.html#arrays)
 * Kotlin has proper [function types](lambdas.html#function-types), as opposed to Java's SAM-conversions
 * [Use-site variance](generics.html#use-site-variance-type-projections) without wildcards
 * Kotlin does not have checked [exceptions](exceptions.html)
@@ -44,3 +44,4 @@ Kotlin fixes a series of issues that Java suffers from
 * [Companion objects](classes.html#companion-objects)
 * [Data classes](data-classes.html)
 * [Separate interfaces for read-only and mutable collections](collections.html)
+* [Coroutines](coroutines.html)

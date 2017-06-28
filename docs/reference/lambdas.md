@@ -70,7 +70,7 @@ fun <T, R> List<T>.map(transform: (T) -> R): List<R> {
 This function can be called as follows:
 
 ``` kotlin
-val doubled = ints.map { it -> it * 2 }
+val doubled = ints.map { value -> value * 2 }
 ```
 
 Note that the parentheses in a call can be omitted entirely if the lambda is the only argument to that call.
@@ -89,6 +89,18 @@ These conventions allow to write [LINQ-style](http://msdn.microsoft.com/en-us/li
 ``` kotlin
 strings.filter { it.length == 5 }.sortBy { it }.map { it.toUpperCase() }
 ```
+
+### Underscore for unused variables (since 1.1)
+
+If the lambda parameter is unused, you can place an underscore instead of its name:
+
+``` kotlin
+map.forEach { _, value -> println("$value!") }
+```
+
+### Destructuring in Lambdas (since 1.1)
+
+Destructuring in lambdas is described as a part of [destructuring declarations](multi-declarations.html#destructuring-in-lambdas-since-11). 
 
 ## Inline Functions
 
@@ -179,7 +191,7 @@ ints.filter {
 
 Note that if a function takes another function as the last parameter, the lambda expression argument can be passed
 outside the parenthesized argument list.
-See the grammar for [callSuffix](grammar.html#call-suffix).
+See the grammar for [callSuffix](grammar.html#callSuffix).
 
 ### Anonymous Functions
 
